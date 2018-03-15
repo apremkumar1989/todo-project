@@ -16,4 +16,13 @@ public class TodoController {
 		return "greeting";
 	}
 
+	@GetMapping("/todos")
+	public String todos() {
+		return "todos";
+	}
+	
+	@GetMapping("/todo/{id}")
+	public String todo() {
+		return "todo";
+	}
 }

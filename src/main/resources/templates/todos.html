@@ -16,16 +16,17 @@
 	<div class="container">
 		<div class="row">
 			<h3>
-				TODOs <small class="text-muted"> - simple and easy</small>
+				TODOs <small class="text-muted"> - simple and easy to manage
+					Todos</small>
 			</h3>
 		</div>
 
 		<div class="row">
 			<div class="col-md-4">
 				<ul class="list-group">
-					<li class="list-group-item"><a th:href="@{'/todo/' + 1}">Travel</a></li>
-					<li class="list-group-item"><a th:href="@{'/todo/' + 1}">Grocery</a></li>
-					<li class="list-group-item"><a th:href="@{'/todo/' + 1}">Movies</a></li>
+					<li th:each="todo:${todos}" class="list-group-item"><a
+						th:href="@{'/todo/' + ${todo.id}}"><span
+							th:text="${todo.name}"></span></a></li>
 				</ul>
 			</div>
 		</div>

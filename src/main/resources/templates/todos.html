@@ -3,22 +3,30 @@
 <head>
 <title>TODOs</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </head>
 <body>
-	<div>
-		<h1>TODOS</h1>
+	<div class="container">
+		<div class="row">
+			<h3>
+				TODOs <small class="text-muted"> - simple and easy</small>
+			</h3>
+		</div>
 
-		<div>
-			<div>
-				<a th:href="@{'/todo/' + 1}">Travel</a>
-			</div>
-
-			<div>
-				<a th:href="@{'/todo/' + 1}">Grocery</a>
-			</div>
-
-			<div>
-				<a th:href="@{'/todo/' + 1}">Movies</a>
+		<div class="row">
+			<div class="col-md-4">
+				<ul class="list-group">
+					<li class="list-group-item"><a th:href="@{'/todo/' + 1}">Travel</a></li>
+					<li class="list-group-item"><a th:href="@{'/todo/' + 1}">Grocery</a></li>
+					<li class="list-group-item"><a th:href="@{'/todo/' + 1}">Movies</a></li>
+				</ul>
 			</div>
 		</div>
 	</div>

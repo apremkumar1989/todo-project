@@ -3,26 +3,26 @@ package com.premkumar.todo.service;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Todo {
+public class TodoDTO {
 
 	public Integer id;
 	private String name;
-	private List<TodoTask> tasks = new ArrayList<Todo.TodoTask>();
+	private List<TodoTaskDTO> tasks = new ArrayList<TodoDTO.TodoTaskDTO>();
 
-	public Todo() {
+	public TodoDTO() {
 
 	}
 
-	public Todo(int id, String name) {
+	public TodoDTO(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public List<TodoTask> getTasks() {
+	public List<TodoTaskDTO> getTasks() {
 		return tasks;
 	}
 
-	public void setTasks(List<TodoTask> tasks) {
+	public void setTasks(List<TodoTaskDTO> tasks) {
 		this.tasks = tasks;
 	}
 
@@ -42,15 +42,15 @@ public class Todo {
 		this.name = name;
 	}
 
-	public static class TodoTask {
+	public static class TodoTaskDTO {
 		private Integer id;
 		private String name;
 		private boolean completed = false;
 
-		public TodoTask() {
+		public TodoTaskDTO() {
 		}
 
-		public TodoTask(int id, String name, boolean completed) {
+		public TodoTaskDTO(int id, String name, boolean completed) {
 			this.id = id;
 			this.name = name;
 			this.completed = completed;

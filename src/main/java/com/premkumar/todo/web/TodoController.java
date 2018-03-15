@@ -1,15 +1,16 @@
 package com.premkumar.todo.web;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,9 @@ import com.premkumar.todo.service.Todo.TodoTask;
 
 @Controller
 public class TodoController {
+
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
 	@GetMapping("/greeting")
 	public String greeting(
@@ -42,119 +46,55 @@ public class TodoController {
 	}
 
 	private List<Todo> getTodosFromDatabase() {
-		List<Todo> data = new ArrayList<Todo>();
-
-		Connection conn = null;
-		Statement stmt = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/todo", "root", "");
-
-			// Step 2: Allocate a 'Statement' object in the Connection
-			stmt = conn.createStatement();
-			String strSelect = "select id, name from todo";
-			System.out.println("The SQL query is: " + strSelect); // Echo For
-																	// debugging
-			System.out.println();
-
-			ResultSet rset = stmt.executeQuery(strSelect);
-
-			// Step 4: Process the ResultSet by scrolling the cursor forward via
-			// next().
-			// For each row, retrieve the contents of the cells with
-			// getXxx(columnName).
-			System.out.println("The records selected are:");
-			int rowCount = 0;
-			while (rset.next()) { // Move the cursor to the next row, return
-									// false if no more row
-				Todo todo = new Todo(rset.getInt("id"), rset.getString("name"));
-				++rowCount;
-				data.add(todo);
-			}
-			System.out.println("Total number of records = " + rowCount);
-
-			stmt.close();
-			conn.close();
-
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-			} catch (Exception se2) {
-			}// nothing we can do
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (Exception se) {
-				se.printStackTrace();
-			}
-		}
-
-		return data;
+		System.out.println("getting todos from database...");
+		String strSelect = "select id, name from todo";
+		List<Todo> result = jdbcTemplate
+				.query(strSelect,
+						(rs, rowNum) -> new Todo(rs.getInt("id"), rs
+								.getString("name")));
+		return CollectionUtils.isEmpty(result) ? Collections.emptyList()
+				: result;
 	}
 
 	private Todo getTodoByIdFromDatabase(int id) {
-		Todo data = null;
+		System.out.println("getting todo by id from database...");
+		Todo todo = null;
 
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/todo", "root", "");
+		String strSelect = "select id, name from todo where id=?";
+		List<Todo> result = jdbcTemplate
+				.query(strSelect,
+						new PreparedStatementSetter() {
 
-			// Step 2: Allocate a 'Statement' object in the Connection
-			String strSelect = "SELECT t.id, t.name, t.user_id, tt.id as tt_id,tt.name as tt_name,tt.completed as tt_completed FROM todo t join todo_task tt on t.id=tt.todo_id where t.id=?";
-			stmt = conn.prepareStatement(strSelect);
-			stmt.setInt(1, id);
-			System.out.println("The SQL query is: " + strSelect); // Echo For
-																	// debugging
-			System.out.println();
+							@Override
+							public void setValues(PreparedStatement ps)
+									throws SQLException {
+								ps.setInt(1, id);
 
-			ResultSet rset = stmt.executeQuery();
+							}
+						},
+						(rs, rowNum) -> new Todo(rs.getInt("id"), rs
+								.getString("name")));
+		if (CollectionUtils.isEmpty(result))
+			return null;
 
-			// Step 4: Process the ResultSet by scrolling the cursor forward via
-			// next().
-			// For each row, retrieve the contents of the cells with
-			// getXxx(columnName).
-			System.out.println("The records selected are:");
-			int rowCount = 0;
-			Todo todo = null;
-			while (rset.next()) { // Move the cursor to the next row, return
-								// false if no more row
-				if (todo == null)
-					todo = new Todo(rset.getInt("id"), rset.getString("name"));
-				todo.getTasks().add(
-						new TodoTask(rset.getInt("tt_id"), rset
-								.getString("tt_name"), rset
-								.getBoolean("tt_completed")));
-				++rowCount;
-				data = todo;
-			}
-			System.out.println("Total number of records = " + rowCount);
+		todo = result.get(0);
 
-			stmt.close();
-			conn.close();
+		strSelect = "select id, name,completed from todo_task where todo_id=?";
+		List<TodoTask> task_results = jdbcTemplate.query(
+				strSelect,
+				new PreparedStatementSetter() {
 
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-			} catch (Exception se2) {
-			}// nothing we can do
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (Exception se) {
-				se.printStackTrace();
-			}
-		}
+					@Override
+					public void setValues(PreparedStatement ps)
+							throws SQLException {
+						ps.setInt(1, id);
 
-		return data;
+					}
+				},
+				(rs, rowNum) -> new TodoTask(rs.getInt("id"), rs
+						.getString("name"), rs.getBoolean("completed")));
+
+		todo.setTasks(task_results);
+		return todo;
 	}
 }

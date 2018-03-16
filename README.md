@@ -27,12 +27,15 @@ This is a simple project to give you hands on experience using the **Spring fram
 
 ## Assignments
 - Custom Styling with Bootstrap CSS
-- CRUD for TODO
+- CRUD for TODO*
 - Make the TODO UI features work(completed or undo complete) and capture the same in database
-- Ajax using jquery or using Form POST
-- User Signup
-- User Profile : Create new Entity, Repository and html changes
-- Extend TODO with date features
-- Create other REST APIs. Eg. user
+- Ajax using jquery* or using Form POST
+- User Signup*
+- User Profile* : Create new Entity, Repository and html changes
+- Extend TODO with date features*
+- Create other REST APIs. Eg. user*
 - Fetch only user related TODOs
-- Spring security: try removing the existing authentication requirement. You can also implement access token feature for APIs
+- Spring security: try removing the existing authentication requirement. You can also implement access token feature for APIs**.
+
+\* denotes medium
+** denotes tough

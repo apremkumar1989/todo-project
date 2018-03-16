@@ -5,15 +5,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.premkumar.todo.entites.Todo;
 import com.premkumar.todo.entites.TodoTask;
 import com.premkumar.todo.repositories.TodoRepository;
+import com.premkumar.todo.security.CustomUserDetails;
 import com.premkumar.todo.service.TodoDTO;
 import com.premkumar.todo.service.TodoDTO.TodoTaskDTO;
 
@@ -24,11 +27,10 @@ public class TodoController {
 	TodoRepository todoRepository;
 
 	@GetMapping("/")
-	public String home(
-			) {
+	public String home() {
 		return "redirect:/todos";
 	}
-	
+
 	@GetMapping("/greeting")
 	public String greeting(
 			@RequestParam(name = "name", required = false, defaultValue = "World") String name,
@@ -71,5 +73,14 @@ public class TodoController {
 							.isCompleted()));
 		}
 		return dto;
+	}
+
+	@ModelAttribute("userId")
+	public Integer getUserId(Authentication authentication) {
+		CustomUserDetails customUser = (CustomUserDetails) authentication
+				.getPrincipal();
+		System.out.println("current logged in user id: "
+				+ customUser.getUserId());
+		return customUser.getUserId();
 	}
 }

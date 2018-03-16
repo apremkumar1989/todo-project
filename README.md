@@ -22,4 +22,4 @@ This is a simple project to give you hands on experience using the **Spring fram
 - Move to Spring Data JPA
 - Implement login feature using Spring Security
 - Implement some REST APIs
-- Refactor coding
+- Code Refactor

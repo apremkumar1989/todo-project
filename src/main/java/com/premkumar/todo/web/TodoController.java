@@ -1,9 +1,5 @@
 package com.premkumar.todo.web;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -13,18 +9,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.premkumar.todo.entites.Todo;
-import com.premkumar.todo.entites.TodoTask;
-import com.premkumar.todo.repositories.TodoRepository;
 import com.premkumar.todo.security.CustomUserDetails;
 import com.premkumar.todo.service.TodoDTO;
-import com.premkumar.todo.service.TodoDTO.TodoTaskDTO;
+import com.premkumar.todo.service.TodoService;
 
 @Controller
 public class TodoController {
 
 	@Autowired
-	TodoRepository todoRepository;
+	TodoService todoService;
 
 	@GetMapping("/")
 	public String home() {
@@ -40,39 +33,17 @@ public class TodoController {
 	}
 
 	@GetMapping("/todos")
-	public String todos(Model model) {
-		model.addAttribute("todos", getTodosFromDatabase());
+	public String todos(@ModelAttribute("userId") Integer userId, Model model) {
+		model.addAttribute("todos", todoService.getTodosByUserId(userId));
 		return "todos";
 	}
 
 	@GetMapping("/todos/{id}")
-	public String todo(@PathVariable int id, Model model) {
-		TodoDTO todo = getTodoByIdFromDatabase(id);
+	public String todo(@PathVariable int id,
+			@ModelAttribute("userId") Integer userId, Model model) {
+		TodoDTO todo = todoService.getTodosByIdAndUserId(userId, id);
 		model.addAttribute("todo", todo);
 		return "todo";
-	}
-
-	private List<TodoDTO> getTodosFromDatabase() {
-		System.out.println("get todos from database...");
-		return todoRepository.findAll().stream().map(t -> {
-			return mapToTaskDTO(t);
-		}).collect(Collectors.toList());
-	}
-
-	private TodoDTO getTodoByIdFromDatabase(int id) {
-		System.out.println("get todo by id from database...");
-		Optional<Todo> findById = todoRepository.findById(id);
-		return findById.isPresent() ? mapToTaskDTO(findById.get()) : null;
-	}
-
-	private TodoDTO mapToTaskDTO(Todo todo) {
-		TodoDTO dto = new TodoDTO(todo.getId(), todo.getName());
-		for (TodoTask task : todo.getTasks()) {
-			dto.getTasks().add(
-					new TodoTaskDTO(task.getId(), task.getName(), task
-							.isCompleted()));
-		}
-		return dto;
 	}
 
 	@ModelAttribute("userId")

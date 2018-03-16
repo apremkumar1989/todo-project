@@ -7,7 +7,7 @@ This is a simple project to give you hands on experience using the **Spring fram
 - Spring JDBC
 - Spring MVC, Thymeleaf
 - Spring Data JPA
-- Bootstrap css
+- Bootstrap CSS
 - Spring Security
 - Develop REST APIs
 

@@ -36,7 +36,7 @@ This is a simple project to give you hands on experience using the **Spring fram
 - Create other REST APIs. Eg. user*
 - Fetch only user related TODOs
 - Spring security: try removing the existing authentication requirement. You can also implement access token feature for APIs**.
-- Spring security: "localhost:8080/", "localhost:8080/home" if not logged, shows error. Fix this issue.
+- Spring security: "localhost:8080/", "localhost:8080/home" shows error if not logged in, shows error. Fix this issue.
 
 \* denotes medium
 ** denotes tough

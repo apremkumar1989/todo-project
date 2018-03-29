@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.premkumar.todo.entites.Todo;
 import com.premkumar.todo.entites.TodoTask;
 import com.premkumar.todo.repositories.TodoRepository;
+import com.premkumar.todo.repositories.TodoTaskRepository;
 import com.premkumar.todo.service.TodoDTO.TodoTaskDTO;
 
 @Service
@@ -18,6 +19,9 @@ public class TodoService {
 
 	@Autowired
 	TodoRepository todoRepository;
+
+	@Autowired
+	TodoTaskRepository todoTaskRepository;
 
 	public List<TodoDTO> getTodosByUserId(Integer userId) {
 		// TODO: need to fetch at user level
@@ -59,6 +63,16 @@ public class TodoService {
 		List<TodoTask> todo_tasks = new ArrayList<TodoTask>(0);
 		todo.setTasks(todo_tasks);
 		todoRepository.save(todo);
-		
+
+	}
+
+	public void toggleTodoTask(Integer taskId) {
+		Optional<TodoTask> optionalTask = todoTaskRepository.findById(taskId);
+		if (!optionalTask.isPresent())
+			return;
+		TodoTask task = optionalTask.get();
+		task.setCompleted(!task.isCompleted());
+		todoTaskRepository.save(task);
+
 	}
 }

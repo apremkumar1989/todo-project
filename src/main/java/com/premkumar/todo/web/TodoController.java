@@ -46,6 +46,12 @@ public class TodoController {
 		return "redirect:/todos";
 	}
 
+	@PostMapping("/todos/{id}/tasks/{task_id}")
+	public String completeTodoTask(@ModelAttribute("userId") Integer userId,@PathVariable("id") Integer todoId,@PathVariable("task_id") Integer taskId) {
+		todoService.toggleTodoTask(taskId);
+		return "redirect:/todos/"+todoId;
+	}
+
 	@GetMapping("/todos/{id}")
 	public String todo(@PathVariable int id,
 			@ModelAttribute("userId") Integer userId, Model model) {

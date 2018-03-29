@@ -25,7 +25,17 @@
 					Todos</small>
 			</h3>
 		</div>
-
+		<div class="row">
+			<form th:action="@{/todos}"
+				method="post">
+				<h3>Create Todo</h3>
+				<p>
+					Name: <input type="text" name="name" />
+					<input type="submit" class="btn btn-primary" value="create" />
+				</p>
+			</form>
+			<br/>
+		</div>
 		<div class="row">
 			<div class="col-md-4">
 				<ul class="list-group">

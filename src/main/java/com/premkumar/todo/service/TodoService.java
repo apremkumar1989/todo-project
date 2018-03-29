@@ -1,5 +1,6 @@
 package com.premkumar.todo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,5 +50,15 @@ public class TodoService {
 							.isCompleted()));
 		}
 		return dto;
+	}
+
+	public void save(TodoDTO todoDto, Integer userId) {
+		Todo todo = new Todo();
+		todo.setUserId(userId);
+		todo.setName(todoDto.getName());
+		List<TodoTask> todo_tasks = new ArrayList<TodoTask>(0);
+		todo.setTasks(todo_tasks);
+		todoRepository.save(todo);
+		
 	}
 }

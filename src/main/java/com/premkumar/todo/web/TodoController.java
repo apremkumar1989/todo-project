@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.premkumar.todo.security.CustomUserDetails;
@@ -36,6 +37,13 @@ public class TodoController {
 	public String todos(@ModelAttribute("userId") Integer userId, Model model) {
 		model.addAttribute("todos", todoService.getTodosByUserId(userId));
 		return "todos";
+	}
+
+	@PostMapping("/todos")
+	public String createTodos(TodoDTO todo,
+			@ModelAttribute("userId") Integer userId) {
+		todoService.save(todo, userId);
+		return "redirect:/todos";
 	}
 
 	@GetMapping("/todos/{id}")

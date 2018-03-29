@@ -2,6 +2,8 @@ package com.premkumar.todo.entites;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -11,6 +13,7 @@ import javax.persistence.Table;
 public class TodoTask {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private Integer id;
 
@@ -54,6 +57,5 @@ public class TodoTask {
 	public void setTodo(Todo todo) {
 		this.todo = todo;
 	}
-	
-	
+
 }
